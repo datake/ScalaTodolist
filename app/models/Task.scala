@@ -8,15 +8,22 @@ import anorm.SqlParser._
 import play.api.db._
 import play.api.Play.current
 
-case class Task(id: Long, label: String)
+case class Task(id: Long,label: String/*, progress: Long*/)
 
 object Task {
 	// Parser for mapping JDBC ResultSet to a single entity of Task model
 	val task = {
 		get[Long]("id") ~
 		get[String]("label") map {
-			case id~label => Task(id, label)
+			case id~label => Task(id, label/*,progress*/)
 		}
+		//get[String]("label") ~
+
+
+		//get[Long]("progress") ~
+		/*get[Long]("progress")map {
+			case id~progress => Task(id,progress)
+		}*/
 	}
 
 	def all(): List[Task] = DB.withConnection { implicit c =>

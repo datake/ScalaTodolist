@@ -26,6 +26,7 @@ object Application extends Controller {
     Ok(views.html.index(Task.all(), taskForm))
   }
   
+  //Add new Task
   def newTask = Action { implicit request =>
     taskForm.bindFromRequest.fold(
       errors => BadRequest(views.html.index(Task.all(), errors)),
@@ -35,10 +36,23 @@ object Application extends Controller {
       }
     )
   }
-  
+  //delete task
   def deleteTask(id: Long) = Action { implicit request =>
     Task.delete(id)
     Redirect(routes.Application.tasks)
+  }
+
+/*JSON {"label": "raberu"}*/
+/*Form <input type="text" name="label" value="raberu"> */
+
+  def updateTask(id: Long) = Action { implicit request =>
+    taskForm.bindFromRequest.fold(
+      errors => BadRequest,
+      label => {//JSON
+         Task.update(id, label)
+         Ok
+      }
+    )
   }
   
 }

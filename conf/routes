@@ -12,6 +12,11 @@ POST		/tasks/:id/delete						controllers.Application.deleteTask(id: Long)
 
 POST		/tasks/:id/update				controllers.Application.updateTask(id: Long)
 
+POST		/tasks/:id/check						controllers.Application.checkTask(id: Long)
+
+POST		/tasks/:id/uncheck						controllers.Application.uncheckTask(id: Long)
+
+
 
 
 

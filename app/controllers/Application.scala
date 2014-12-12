@@ -43,7 +43,7 @@ object Application extends Controller {
   }
 
 /*JSON {"label": "raberu"}*/
-/*Form <input type="text" name="label" value="raberu"> */
+/*Form <input type="text" name="label" xvalue="raberu"> */
 
   def updateTask(id: Long) = Action { implicit request =>
     taskForm.bindFromRequest.fold(
@@ -54,5 +54,26 @@ object Application extends Controller {
       }
     )
   }
+   def checkTask(id: Long) = Action { implicit request =>
+    Task.check(id)
+    Redirect(routes.Application.tasks)
+  }
+
+    def uncheckTask(id: Long) = Action { implicit request =>
+    Task.uncheck(id)
+    Redirect(routes.Application.tasks)
+  }
+
+/*
+  def sortTask = Action { implicit request =>
+    taskForm.bindFromRequest.fold(
+      errors => BadRequest,
+      seq => {//JSON
+         Task.sort(task)
+         Ok
+      }
+    )
+  }
+*/
   
 }

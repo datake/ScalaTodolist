@@ -68,5 +68,37 @@ object Task {
 				'label -> label
 			).executeUpdate()
 		}
-	}		
+	}
+	def check(id: Long) {
+		DB.withConnection { implicit c =>
+			//SQL("update task set progress = if(progress=1, 0, 1) where id = {id}").on(
+				SQL("update task set progress = 1  where id = {id}").on(
+				'id -> id
+			).executeUpdate()
+			/*f(progress==1){
+				  progress=0;	
+			}else {
+  					progress=1;
+			}*/
+		}
+	}
+	def uncheck(id: Long) {
+		DB.withConnection { implicit c =>
+			
+				SQL("update task set progress = 0  where id = {id}").on(
+				'id -> id
+			).executeUpdate()
+		}
+	}	
+
+/*
+	def sort(task) {
+		DB.withConnection { implicit c =>
+			SQL("update task set seq={seq} where id = {id}").on(
+				'id -> id,
+				'seq -> seq
+			).executeUpdate()
+		}
+	}
+*/	
 }

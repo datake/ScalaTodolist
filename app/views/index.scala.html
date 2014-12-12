@@ -10,7 +10,10 @@
         
         @tasks.map { task =>
             <li id="task_@{task.id}" data-id="@{task.id}">
-                <input type="checkbox" class="checkTask" @{if(task.id ==4) "checked"}>
+                <!--多分うまくprogressに0と1いれれてない -->
+                <input type="checkbox" class="checkTask" @{if(task.progress==1) "checked "}>
+               
+                <span>progress:@task.progress</span>
                <span class ="label_@{task.id}"> @task.label</span> 
 
                 <span class ="editTask">[edit]</span>
@@ -37,25 +40,58 @@
 
 <script>
 $(function() {
- 
+   
+   //[はまった]チェックボックスに対してではなくラベルに対してつける
+    $("input[type='checkbox']").filter(":checked").next().addClass('done');
+
     //CHECKBOX
     $(document).on('click', '.checkTask', function() {
         var id = $(this).parent().data('id');
-        //alert(id);
-        var title = $(this).next();
-        console.log(title);
-        
-        /*$.post('_ajax_check_task.php', {
-            id: id
-        }, function(rs) {*/
-            if (title.hasClass('done')) {
-                title.removeClass('done');
-                alert("remove done");
-            } else {
-                title.addClass('done');
-                alert("add done");
-            }
-      //  });
+        var label = $(this).next();
+       //console.log(id);
+        //alert(label.hasClass('done'));
+
+
+     if($(".checkTask").prop('checked')) {
+     alert("チェック");
+
+        //check
+            $.post('/tasks/'+id+'/check', {
+                id: id
+            }, function(rs) {
+               if (label.hasClass('done')) {
+                    label.removeClass('done');
+                    alert("remove done1");
+                } else {
+                    label.addClass('done');
+                    alert("add done1");
+                }
+                
+            });
+     } else {
+     alert("unチェック");
+         $.post('/tasks/'+id+'/uncheck', {
+                        id: id
+                    }, function(rs) {
+                       if (label.hasClass('done')) {
+                           // label.addClass('done');
+                           // alert("add done2");
+                             label.removeClass('done');
+                            alert("remove done2");
+                        } else {
+                             label.removeClass('done');
+                            alert("remove done2");
+                        }
+                     
+                    });
+
+
+
+   }
+
+
+
+    
     });
 
 
@@ -86,11 +122,13 @@ $(function() {
         axis: 'y',
         opacity: 0.2,
         handle: '.drag',
-        update: function() {
-          /*  $.post('_ajax_sort_task.php', {
-                task: $(this).sortable('serialize')
-            });*/
-        }
+        /*update: function() {
+             $.post('/tasks/sort', {
+                 task: $(this).sortable('serialize')
+            }, function(rs) {
+         
+            });
+        }*/
     });
 
     //edit 項目名はjQueryでDOMからみつけてくる。データベースは利用していない
